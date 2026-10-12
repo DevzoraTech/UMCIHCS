@@ -9,3 +9,6 @@ artifacts/
 !.env.example
 .DS_Store
 *.log
+
+# Local Netlify folder
+.netlify

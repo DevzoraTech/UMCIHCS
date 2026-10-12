@@ -7,7 +7,10 @@ const attempts = new Map<string,{count:number;expires:number}>();
 function limited(key:string){const now=Date.now();for(const[k,v]of attempts)if(v.expires<now)attempts.delete(k);const current=attempts.get(key);if(current){current.count++;return current.count>5;}if(attempts.size>=1000)return true;attempts.set(key,{count:1,expires:now+60000});return false;}
 export async function POST(request: Request) {
   const origin=request.headers.get("origin");
-  if(!origin || origin!==new URL(request.url).origin) return Response.json({error:"Please submit using this website’s form."},{status:403});
+  const requestOrigin=new URL(request.url).origin;
+  const productionOrigin=process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/,"");
+  const allowedOrigins=new Set([requestOrigin,productionOrigin].filter((value):value is string=>Boolean(value)));
+  if(!origin || !allowedOrigins.has(origin)) return Response.json({error:"Please submit using this website’s form."},{status:403});
   if(!request.headers.get("content-type")?.includes("application/json")) return Response.json({error:"Unsupported request format."},{status:415});
   const client=request.headers.get("x-nf-client-connection-ip") || "local";
   if(limited(client)) return Response.json({error:"Please wait a minute before trying again."},{status:429,headers:{"Retry-After":"60"}});

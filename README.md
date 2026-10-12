@@ -2,6 +2,9 @@
 
 A locally maintained Next.js application for the Uganda Medical Cannabis and Industrial Hemp Cooperative Society. This is a new design; the earlier website was used only to recover identity and project context.
 
+- Production: https://umcihcs-uganda.netlify.app
+- Source: https://github.com/DevzoraTech/UMCIHCS
+
 ## Run locally
 
 Node.js 22 is recommended (`nvm use`).
@@ -19,7 +22,7 @@ Open http://localhost:3000. For a production preview, run `npm run build` follow
 - Membership, membership application, Contact and Privacy.
 - Searchable/filterable resources and three introductory articles.
 - Responsive navigation, keyboard-accessible gallery viewer and membership FAQs.
-- User-provided badge and three company photographs; clearly labeled placeholders for outstanding portraits.
+- User-provided badge, brand artwork and three company photographs; clearly labeled placeholders for outstanding portraits.
 - Application and contact validation; email draft fallback; optional direct delivery.
 
 ## Forms
@@ -54,7 +57,8 @@ See `docs/assets.md` for image provenance and the generated landscape prompt. Ad
 
 ## Netlify
 
-`netlify.toml` specifies the build and Node version. Netlify's Next.js support handles the dynamic forms and API route; do not use a static export. Set `NEXT_PUBLIC_SITE_URL` to the eventual public URL to populate the sitemap, and configure email variables if using direct delivery. Nothing has been deployed.
+`netlify.toml` specifies the build and Node version. Netlify's Next.js support handles the dynamic forms and API route; do not use a static export. The production project is `umcihcs-uganda`, and `NEXT_PUBLIC_SITE_URL` is configured so the sitemap uses the live URL. Configure the email variables if direct delivery is required.
+
+The current production deployment was uploaded with Netlify CLI. The GitHub repository is not yet connected to Netlify's continuous-deployment webhook; connect it in the Netlify project dashboard when automatic deploys from `main` are desired.
 
 See `docs/architecture.md` for dependency boundaries.
-# UMCIHCS

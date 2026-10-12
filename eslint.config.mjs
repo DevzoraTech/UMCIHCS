@@ -24,5 +24,5 @@ export default defineConfig([
       }]
     }
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"])
+  globalIgnores([".next/**", ".netlify/**", "out/**", "build/**", "next-env.d.ts"])
 ]);
