@@ -2,7 +2,7 @@
 
 A locally maintained Next.js application for the Uganda Medical Cannabis and Industrial Hemp Cooperative Society. This is a new design; the earlier website was used only to recover identity and project context.
 
-- Production: https://umcihcs-uganda.netlify.app
+- Production: https://umcihcs.antikra.com
 - Source: https://github.com/DevzoraTech/UMCIHCS
 
 ## Run locally
@@ -23,15 +23,11 @@ Open http://localhost:3000. For a production preview, run `npm run build` follow
 - Searchable/filterable resources and three introductory articles.
 - Responsive navigation, keyboard-accessible gallery viewer and membership FAQs.
 - User-provided badge, brand artwork and three company photographs; clearly labeled placeholders for outstanding portraits.
-- Application and contact validation; email draft fallback; optional direct delivery.
+- Validated contact and membership forms with spam protection, direct submission and an email fallback.
 
 ## Forms
 
-By default, forms validate input and prepare an email draft addressed to `bonnykapere@gmail.com`. The visitor reviews and sends it in their email application. The UI never reports that an unsent draft has been submitted.
-
-For direct delivery, copy `.env.example` to `.env.local`, configure `RESEND_API_KEY` and `ENQUIRY_FROM_EMAIL` using a verified sender domain, then restart the app. The default destination can be changed with `ENQUIRY_TO_EMAIL`. The server validates input, checks same-origin requests, limits payload size, applies a honeypot and basic per-instance throttling, and uses an idempotency key. No application database is created. The current throttle is a basic safeguard; use hosting-level rate limiting for public traffic across serverless instances.
-
-Email delivery has not been tested against a live provider. No test messages were sent. Resend setup: https://resend.com/docs/api-reference/emails/send-email
+The contact and membership forms submit to Netlify Forms. Verified submissions are stored in the project Forms dashboard and trigger a notification to `bonnykapere@gmail.com`. Both forms include a honeypot, client-side validation and a mailto fallback if hosted delivery cannot be confirmed.
 
 ## Validation
 
@@ -57,7 +53,7 @@ See `docs/assets.md` for image provenance and the generated landscape prompt. Ad
 
 ## Netlify
 
-`netlify.toml` specifies the build and Node version. Netlify's Next.js support handles the dynamic forms and API route; do not use a static export. The production project is `umcihcs-uganda`, and `NEXT_PUBLIC_SITE_URL` is configured so the sitemap uses the live URL. Configure the email variables if direct delivery is required.
+`netlify.toml` specifies the build and Node version. Netlify's Next.js support and form detection handle the application and its forms; do not use a static export. The production project is `umcihcs-uganda`, and `NEXT_PUBLIC_SITE_URL` is configured so the sitemap uses the custom domain.
 
 The current production deployment was uploaded with Netlify CLI. The GitHub repository is not yet connected to Netlify's continuous-deployment webhook; connect it in the Netlify project dashboard when automatic deploys from `main` are desired.
 

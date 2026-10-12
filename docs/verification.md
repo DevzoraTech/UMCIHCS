@@ -17,7 +17,7 @@ Screenshots are stored under `artifacts/`. The homepage hero and gallery photogr
 
 ## Deployment dependencies
 
-Direct email delivery requires a verified sender and service key. In their absence, the tested email draft workflow remains available. Final domain configuration is needed for a populated sitemap. Public production traffic should use hosting-level abuse controls in addition to the route's per-instance request limiter.
+Production uses Netlify Forms with submission notifications configured for the cooperative address. Keep form detection and the notification hook enabled when changing hosting settings. The email-draft workflow remains available as a fallback.
 
 ## Dependency audit
 
