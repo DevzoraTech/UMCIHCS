@@ -1,0 +1,6 @@
+import { PageHeading } from "@/presentation/components/ui/page-heading";
+import { EnquiryForm } from "@/presentation/components/forms/enquiry-form";
+import { emailDeliveryConfigured } from "@/infrastructure/email/resend-delivery";
+export const metadata={title:"Apply for membership"};
+export const dynamic="force-dynamic";
+export default function ApplyPage(){return <><PageHeading eyebrow="Membership application" title="A new connection" accent="starts with you." description="Tell us about yourself and your interest in the cooperative. The team will guide you through the next steps."/><section className="container section editorial-grid form-layout"><aside className="form-aside"><p className="eyebrow">Before you begin</p><h2>A little about you.<br/><em>A conversation to follow.</em></h2><p>Share your background and how you would like to contribute. This initial enquiry helps the cooperative understand your interests.</p><ul className="feature-list"><li>Use contact details where the team can reach you.</li><li>Tell us which part of the sector interests you.</li><li>Do not include identity documents or payment details.</li><li>Confirm eligibility and any fees directly with the team.</li></ul></aside><EnquiryForm kind="membership" deliveryEnabled={emailDeliveryConfigured()}/></section></>}

@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { validateEnquiry, enquiryText } from '../src/domain/enquiries/enquiry.ts';
+const valid = {kind:'membership',name:'Test Applicant',email:'applicant@example.com',phone:'+256700000000',location:'Kampala',profile:'Researcher / academic',interest:'Research & knowledge',message:'I would like to learn about joining the cooperative.',consent:true};
+test('accepts and trims a complete application',()=>{const result=validateEnquiry({...valid,name:' Test Applicant '});assert.equal(result.ok,true);assert.equal(result.value.name,'Test Applicant');});
+test('rejects missing consent and unknown profile',()=>{assert.equal(validateEnquiry({...valid,consent:false}).ok,false);assert.equal(validateEnquiry({...valid,profile:'unknown'}).ok,false);});
+test('rejects malformed email, header injection and oversized message',()=>{for(const changes of [{email:'not-email'},{name:'User\nBcc: victim@example.com'},{message:'a'.repeat(4001)}])assert.equal(validateEnquiry({...valid,...changes}).ok,false);});
+test('contact enquiries do not require membership fields',()=>assert.equal(validateEnquiry({kind:'contact',name:'A',email:'a@example.com',message:valid.message,consent:true}).ok,true));
+test('rejects wrong field types and too short messages',()=>{for(const changes of [{phone:42},{message:'short'},{email:[]},{kind:'other'}])assert.equal(validateEnquiry({...valid,...changes}).ok,false);});
+test('email text includes application data and consent',()=>{const result=validateEnquiry(valid);assert.match(enquiryText(result.value),/applicant@example.com/);assert.match(enquiryText(result.value),/Consent:/);});

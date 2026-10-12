@@ -1,0 +1,2 @@
+import { ButtonLink } from "./button-link";
+export function MembershipCta() { return <section className="membership-cta"><div className="container cta-inner"><div><p className="eyebrow">Better, together</p><h2>Your perspective.<br /><em>Our collective potential.</em></h2></div><div><p>Be part of the conversation shaping Uganda’s medical cannabis and industrial hemp sector.</p><ButtonLink href="/membership/apply">Explore your place with us</ButtonLink></div></div></section>; }
