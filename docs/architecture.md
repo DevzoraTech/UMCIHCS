@@ -18,7 +18,7 @@ No database, CMS, authentication, analytics, or delivery provider has been selec
 
 ## Implemented enquiry flow
 
-`src/domain/enquiries/enquiry.ts` owns input validation and the plain-text enquiry representation. The form component owns presentation state and submits validated data to Netlify Forms. Static form definitions in `src/presentation/components/forms/netlify-form-definitions.tsx` allow Netlify to register both forms during the build. A mailto draft remains available as a delivery fallback.
+`src/domain/enquiries/enquiry.ts` owns input validation and the plain-text enquiry representation. The form component owns presentation state and submits validated data to Netlify Forms. The static definitions in `public/__forms.html` allow Netlify to register both forms during the build. A mailto draft remains available as a delivery fallback.
 
 ## Content and UI
 
