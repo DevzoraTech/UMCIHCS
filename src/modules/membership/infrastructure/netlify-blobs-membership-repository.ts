@@ -1,18 +1,17 @@
-import { getStore } from "@netlify/blobs";
 import type { MembershipRepository } from "../application/repository";
 import type { ApplicationFilters, ApplicationStats, ApplicationStatus, Member, MembershipApplicationDetail, MembershipApplicationSummary, NewApplication, NewMember } from "../domain/models";
+import { readPortalJson, writePortalJson } from "@/modules/shared/infrastructure/portal-storage-client";
 
 type MembershipState = { applications: MembershipApplicationDetail[]; members: Member[]; nextMemberNumber: number };
 const key = "membership/state.json";
 const empty = (): MembershipState => ({ applications: [], members: [], nextMemberNumber: 1 });
-const store = () => getStore("umcihcs-portal");
 
 function matches(item: MembershipApplicationSummary, filters: ApplicationFilters) { const query=filters.query?.toLowerCase(); return (!filters.status||item.status===filters.status)&&(!filters.applicantType||item.applicantType===filters.applicantType)&&(!query||`${item.reference} ${item.applicantName} ${item.email} ${item.phone}`.toLowerCase().includes(query)); }
 function number(state: MembershipState) { const value=`UMC-${new Date().getFullYear()}-${String(state.nextMemberNumber).padStart(5,"0")}`;state.nextMemberNumber+=1;return value; }
 
 export class NetlifyBlobsMembershipRepository implements MembershipRepository {
-  private async read(){const record=await store().getWithMetadata(key,{type:"json"});return {state:(record?.data as MembershipState|undefined)??empty(),etag:record?.etag};}
-  private async mutate<T>(change:(state:MembershipState)=>T){for(let attempt=0;attempt<5;attempt+=1){const{state,etag}=await this.read();const result=change(state);const saved=await store().setJSON(key,state,etag?{onlyIfMatch:etag}:{onlyIfNew:true});if(saved.modified)return result;}throw new Error("Membership records changed concurrently. Please try again.");}
+  private async read(){const record=await readPortalJson<MembershipState>("umcihcs-portal",key);return {state:record.data??empty(),etag:record.etag};}
+  private async mutate<T>(change:(state:MembershipState)=>T){for(let attempt=0;attempt<5;attempt+=1){const{state,etag}=await this.read();const result=change(state);const saved=await writePortalJson("umcihcs-portal",key,state,etag?{etag}:{onlyIfNew:true});if(saved.modified)return result;}throw new Error("Membership records changed concurrently. Please try again.");}
   async applicationStats():Promise<ApplicationStats>{const{state}=await this.read();const stats:ApplicationStats={all:state.applications.length,pending:0,under_review:0,clarification_requested:0,approved:0,rejected:0};for(const item of state.applications)stats[item.status]+=1;return stats;}
   async listApplications(filters:ApplicationFilters={}){const{state}=await this.read();return state.applications.filter(item=>matches(item,filters)).sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)).map(item=>({id:item.id,reference:item.reference,applicantType:item.applicantType,applicantName:item.applicantName,email:item.email,phone:item.phone,location:item.location,status:item.status,submittedAt:item.submittedAt,reviewedAt:item.reviewedAt}));}
   async getApplication(id:string){const{state}=await this.read();return state.applications.find(item=>item.id===id||item.reference===id)??null;}

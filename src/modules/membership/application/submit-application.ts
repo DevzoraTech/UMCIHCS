@@ -1,4 +1,4 @@
-import { getStore } from "@netlify/blobs";
+import { uploadPortalDocument } from "@/modules/shared/infrastructure/portal-storage-client";
 import { validateMembershipApplication } from "@/domain/membership/application";
 import type { ApplicationDocument, NewApplication } from "../domain/models";
 import { membershipRepository } from "../infrastructure/repository-factory";
@@ -22,7 +22,7 @@ async function storeDocument(reference: string, file: File): Promise<Application
   if (!["application/pdf", "image/jpeg", "image/png"].includes(file.type)) throw new Error("The registration certificate must be a PDF, JPG or PNG file.");
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(-120);
   const key = `membership/${reference}/${crypto.randomUUID()}-${safeName}`;
-  await getStore({ name: "membership-documents", consistency: "strong" }).set(key, file, { metadata: { name: file.name, type: file.type, reference } });
+  await uploadPortalDocument(key,file,{name:file.name,type:file.type,reference});
   return { key, name: file.name, type: file.type, size: file.size };
 }
 
