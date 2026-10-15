@@ -2,6 +2,7 @@ import { uploadPortalDocument } from "@/modules/shared/infrastructure/portal-sto
 import { validateMembershipApplication } from "@/domain/membership/application";
 import type { ApplicationDocument, NewApplication } from "../domain/models";
 import { membershipRepository } from "../infrastructure/repository-factory";
+import { sendEmail } from "@/modules/notifications/infrastructure/email";
 
 const checkboxNames = ["authorization_declaration", "declaration_accurate", "declaration_bylaws", "declaration_review", "declaration_privacy", "newsletter_consent"];
 
@@ -46,5 +47,23 @@ export async function submitMembershipApplication(form: FormData) {
     data,
     document,
   };
-  return { accepted: true, ...(await membershipRepository().createApplication(input)) };
+  const created = await membershipRepository().createApplication(input);
+  const administrator = process.env.MEMBERSHIP_NOTIFICATION_EMAIL?.trim() || process.env.PORTAL_SUPERADMIN_EMAIL?.trim();
+  const recipientName = input.applicantName;
+  const acknowledgement = sendEmail({
+    to: input.email,
+    subject: `We received your UMCIHCS membership application — ${created.reference}`,
+    text: `Dear ${recipientName},\n\nThank you for applying to join the Uganda Medical Cannabis and Industrial Hemp Cooperative Society (UMCIHCS) Ltd.\n\nWe have received your membership application. Your reference is ${created.reference}. Submission does not automatically confer membership; the cooperative will review your application and contact you about the next steps.\n\nUMCIHCS Ltd`,
+    senderName: "UMCIHCS Membership",
+    replyTo: process.env.PORTAL_SUPERADMIN_EMAIL,
+  });
+  const notification = administrator ? sendEmail({
+    to: administrator,
+    subject: `New UMCIHCS membership application — ${created.reference}`,
+    text: `A new membership application has been received.\n\nReference: ${created.reference}\nApplicant: ${input.applicantName}\nType: ${input.applicantType}\nEmail: ${input.email}\nPhone: ${input.phone}\nLocation: ${input.location}\n\nOpen the membership portal to review the full application.`,
+    senderName: "UMCIHCS Membership",
+    replyTo: input.email,
+  }) : Promise.resolve({ delivered: false as const, reason: "No administrator email is configured." });
+  const [applicantEmail, administratorEmail] = await Promise.all([acknowledgement, notification]);
+  return { accepted: true, ...created, email: { applicant: applicantEmail.delivered, administrator: administratorEmail.delivered } };
 }

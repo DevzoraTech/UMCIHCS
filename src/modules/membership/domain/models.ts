@@ -18,12 +18,14 @@ export type MembershipApplicationSummary = {
 export type ReviewNote = { id: string; body: string; authorName: string; createdAt: string };
 export type ApplicationEvent = { id: string; eventType: string; description: string; actorName: string | null; createdAt: string };
 export type ApplicationDocument = { key: string; name: string; type: string; size: number };
+export type PortalMessage = { id: string; body: string; authorName: string; authorEmail: string; recipientEmail: string; createdAt: string };
 
 export type MembershipApplicationDetail = MembershipApplicationSummary & {
   data: Record<string, unknown>;
   document: ApplicationDocument | null;
   notes: ReviewNote[];
   timeline: ApplicationEvent[];
+  messages?: PortalMessage[];
 };
 
 export type Member = {
@@ -36,6 +38,7 @@ export type Member = {
   location: string;
   status: "active" | "inactive";
   admittedAt: string;
+  messages?: PortalMessage[];
 };
 
 export type ApplicationFilters = { query?: string; status?: ApplicationStatus; applicantType?: ApplicantType };

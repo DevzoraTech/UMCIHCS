@@ -1,5 +1,5 @@
 import type { MembershipRepository } from "../application/repository";
-import type { ApplicationFilters, ApplicationStats, ApplicationStatus, Member, MembershipApplicationDetail, NewApplication, NewMember } from "../domain/models";
+import type { ApplicationFilters, ApplicationStats, ApplicationStatus, Member, MembershipApplicationDetail, NewApplication, NewMember, PortalMessage } from "../domain/models";
 
 const now = new Date();
 const daysAgo = (days: number) => new Date(now.getTime() - days * 86_400_000).toISOString();
@@ -16,7 +16,10 @@ export class DemoMembershipRepository implements MembershipRepository {
   async createApplication(input:NewApplication){return{id:"demo-created",reference:input.reference};}
   async updateApplicationStatus(id:string,status:ApplicationStatus){const item=demoApplications.find(x=>x.id===id);if(item)item.status=status;}
   async addReviewNote(id:string,body:string,_actorId:string,actorName:string){const item=demoApplications.find(x=>x.id===id);item?.notes.unshift({id:crypto.randomUUID(),body,authorName:actorName,createdAt:new Date().toISOString()});}
+  async addApplicationMessage(id:string,message:PortalMessage){const item=demoApplications.find(x=>x.id===id);if(!item)throw new Error("Application not found");(item.messages??=[]).unshift(message);}
   async approveApplication(id:string){const item=demoApplications.find(x=>x.id===id);if(!item)throw new Error("Application not found");item.status="approved";return demoMembers[0];}
   async listMembers(query=""){return demoMembers.filter(item=>!query||`${item.memberNumber} ${item.displayName} ${item.email}`.toLowerCase().includes(query.toLowerCase()));}
+  async getMember(id:string){return demoMembers.find(item=>item.id===id||item.memberNumber===id)??null;}
   async createMember(input:NewMember){const created:Member={...input,id:crypto.randomUUID(),memberNumber:input.memberNumber??`DEMO-MEM-${demoMembers.length+1}`,admittedAt:input.admittedAt??new Date().toISOString()};demoMembers.unshift(created);return created;}
+  async addMemberMessage(id:string,message:PortalMessage){const item=demoMembers.find(x=>x.id===id);if(!item)throw new Error("Member not found");(item.messages??=[]).unshift(message);}
 }
