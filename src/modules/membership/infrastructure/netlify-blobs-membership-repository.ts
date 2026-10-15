@@ -5,7 +5,7 @@ import type { ApplicationFilters, ApplicationStats, ApplicationStatus, Member, M
 type MembershipState = { applications: MembershipApplicationDetail[]; members: Member[]; nextMemberNumber: number };
 const key = "membership/state.json";
 const empty = (): MembershipState => ({ applications: [], members: [], nextMemberNumber: 1 });
-const store = () => getStore({ name: "umcihcs-portal", consistency: "strong" });
+const store = () => getStore("umcihcs-portal");
 
 function matches(item: MembershipApplicationSummary, filters: ApplicationFilters) { const query=filters.query?.toLowerCase(); return (!filters.status||item.status===filters.status)&&(!filters.applicantType||item.applicantType===filters.applicantType)&&(!query||`${item.reference} ${item.applicantName} ${item.email} ${item.phone}`.toLowerCase().includes(query)); }
 function number(state: MembershipState) { const value=`UMC-${new Date().getFullYear()}-${String(state.nextMemberNumber).padStart(5,"0")}`;state.nextMemberNumber+=1;return value; }

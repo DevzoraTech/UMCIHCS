@@ -3,7 +3,7 @@ import { promisify } from "node:util";
 import { getStore } from "@netlify/blobs";
 import type { PortalActor, PortalRole } from "../application/permissions";
 
-const scrypt=promisify(scryptCallback);const usersKey="identity/users.json";const cookieName="umcihcs_portal_session";const store=()=>getStore({name:"umcihcs-portal",consistency:"strong"});
+const scrypt=promisify(scryptCallback);const usersKey="identity/users.json";const cookieName="umcihcs_portal_session";const store=()=>getStore("umcihcs-portal");
 type PortalUser={id:string;name:string;email:string;role:PortalRole;passwordHash:string;createdAt:string};
 const secret=()=>process.env.BETTER_AUTH_SECRET??"";
 function encode(input:string){return Buffer.from(input).toString("base64url");}function decode(input:string){return Buffer.from(input,"base64url").toString();}
