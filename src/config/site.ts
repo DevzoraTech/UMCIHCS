@@ -4,6 +4,10 @@ export const site = {
   description: "Uniting stakeholders to build a responsible, knowledge-led medical cannabis and industrial hemp sector in Uganda.",
   email: "umcihcs@gmail.com",
   motto: "Virtus et Dignitas",
+  social: {
+    x: "https://x.com/umcihcs?s=11",
+    tiktok: "https://www.tiktok.com/@umcihcs?_r=1&_t=ZS-9AZANpHe1WX",
+  },
 };
 export const navigation = [
   { label: "About us", href: "/about" },

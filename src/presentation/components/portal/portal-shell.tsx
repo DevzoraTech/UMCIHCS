@@ -9,6 +9,7 @@ import { hasPermission, roleLabel } from "@/modules/identity/application/permiss
 import { authClient } from "@/modules/identity/infrastructure/auth-client";
 
 const links = [
+  { href: "/portal/dashboard", label: "Dashboard", icon: "grid" },
   { href: "/portal/membership/applications", label: "Applications", icon: "file" },
   { href: "/portal/membership/members", label: "Members", icon: "people" },
   { href: "/portal/membership/register", label: "Register member", icon: "plus" },
@@ -32,17 +33,18 @@ export function PortalShell({ actor, children }: { actor: PortalActor; children:
   const [open, setOpen] = useState(false);
   const [search,setSearch]=useState("");
   const applicationDetail=path.includes("/membership/applications/");
-  const pageTitle=applicationDetail?"Application Details":path.includes("/membership/members")?"Members":path.includes("/membership/register")?"Register Member":path.includes("/settings")?"Settings":"Membership Applications";
-  const pageSubtitle=applicationDetail?"Membership Applications  /  Application Details":path.includes("/membership/members")?"View and manage the cooperative membership register":path.includes("/membership/register")?"Create a direct membership record":path.includes("/settings")?"Portal configuration and account security.":"Review, process and manage membership applications for UMCIHCS.";
+  const pageTitle=path==="/portal/dashboard"?"Dashboard":applicationDetail?"Application Details":path.includes("/membership/members")?"Members":path.includes("/membership/register")?"Register Member":path.includes("/settings")?"Settings":"Membership Applications";
+  const pageSubtitle=path==="/portal/dashboard"?"A concise view of membership activity.":applicationDetail?"Membership Applications  /  Application Details":path.includes("/membership/members")?"View and manage the cooperative membership register":path.includes("/membership/register")?"Create a direct membership record":path.includes("/settings")?"Portal configuration and account security.":"Review, process and manage membership applications for UMCIHCS.";
   async function signOut() { await authClient.signOut(); router.replace("/portal/login"); router.refresh(); }
   function globalSearch(event:FormEvent){event.preventDefault();const value=search.trim();router.push(`/portal/membership/applications${value?`?q=${encodeURIComponent(value)}`:""}`);}
   return <div className="portal-root">
     <aside className={open ? "portal-sidebar is-open" : "portal-sidebar"}>
       <div className="portal-brand"><Image src="/images/umcihcs-badge.jpg" alt="UMCIHCS" width={76} height={76}/><span><strong>UMCIHCS</strong><small>Uganda Medical Cannabis<br/>and Industrial Hemp<br/>Cooperative Society</small></span></div>
       <nav aria-label="Portal navigation">
-        {links.slice(0,2).map(link=><Link key={link.href} href={link.href} onClick={()=>setOpen(false)} aria-current={path.startsWith(link.href)?"page":undefined}><PortalIcon name={link.icon}/>{link.label}</Link>)}
-        {hasPermission(actor,"members:create")&&<Link href={links[2].href} onClick={()=>setOpen(false)} aria-current={path.startsWith(links[2].href)?"page":undefined}><PortalIcon name={links[2].icon}/>{links[2].label}</Link>}
-        {hasPermission(actor,"settings:view")&&<Link href={links[3].href} onClick={()=>setOpen(false)} aria-current={path.startsWith(links[3].href)?"page":undefined}><PortalIcon name={links[3].icon}/>{links[3].label}</Link>}
+        <Link href={links[0].href} onClick={()=>setOpen(false)} aria-current={path.startsWith(links[0].href)?"page":undefined}><PortalIcon name={links[0].icon}/>{links[0].label}</Link>
+        {links.slice(1,3).map(link=><Link key={link.href} href={link.href} onClick={()=>setOpen(false)} aria-current={path.startsWith(link.href)?"page":undefined}><PortalIcon name={link.icon}/>{link.label}</Link>)}
+        {hasPermission(actor,"members:create")&&<Link href={links[3].href} onClick={()=>setOpen(false)} aria-current={path.startsWith(links[3].href)?"page":undefined}><PortalIcon name={links[3].icon}/>{links[3].label}</Link>}
+        {hasPermission(actor,"settings:view")&&<Link href={links[4].href} onClick={()=>setOpen(false)} aria-current={path.startsWith(links[4].href)?"page":undefined}><PortalIcon name={links[4].icon}/>{links[4].label}</Link>}
       </nav>
       <div className="portal-sidebar-note"><strong>Legal People.<br/>Sustainable Plants.<br/>A Healthier Uganda.</strong><i/><small>Cooperatives for<br/>People, Plants and Prosperity.</small></div>
     </aside>
