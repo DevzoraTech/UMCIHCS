@@ -1,5 +1,5 @@
 type StoredJson<T>={data:T|null;etag?:string};
-const storageKey=()=>process.env.PORTAL_STORAGE_KEY??"";
+const storageKey=()=>process.env.BETTER_AUTH_SECRET??"";
 const storageUrl=()=>{const base=process.env.URL??process.env.BETTER_AUTH_URL;if(!base)throw new Error("The portal storage endpoint is not configured.");return new URL("/api/internal/portal-storage",base).toString();};
 
 async function call(body:BodyInit,headers:HeadersInit={}){const key=storageKey();if(!key)throw new Error("The portal storage endpoint is not configured.");const response=await fetch(storageUrl(),{method:"POST",headers:{"x-umcihcs-portal-key":key,...headers},body,cache:"no-store"});if(!response.ok)throw new Error("The portal storage service is unavailable.");return response;}

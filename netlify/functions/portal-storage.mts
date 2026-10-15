@@ -3,7 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 
 const json={"Content-Type":"application/json","Cache-Control":"no-store"};
 const allowedStores=new Set(["umcihcs-portal"]);
-function allowed(request:Request){const supplied=request.headers.get("x-umcihcs-portal-key")??"";const configured=process.env.PORTAL_STORAGE_KEY??"";if(!supplied||!configured||supplied.length!==configured.length)return false;return timingSafeEqual(Buffer.from(supplied),Buffer.from(configured));}
+function allowed(request:Request){const supplied=request.headers.get("x-umcihcs-portal-key")??"";const configured=process.env.BETTER_AUTH_SECRET??"";if(!supplied||!configured||supplied.length!==configured.length)return false;return timingSafeEqual(Buffer.from(supplied),Buffer.from(configured));}
 function bad(message:string,status=400){return new Response(JSON.stringify({error:message}),{status,headers:json});}
 
 export default async function handler(request:Request){
