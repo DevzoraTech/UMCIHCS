@@ -1,0 +1,5 @@
+import { redirect } from "next/navigation";
+import { authorizedPortalActor } from "@/modules/identity/application/session";
+import { roleLabel } from "@/modules/identity/application/permissions";
+import { ChangePasswordForm } from "@/presentation/components/portal/change-password-form";
+export default async function SettingsPage(){const actor=await authorizedPortalActor("settings:view");if(!actor)redirect("/portal/dashboard");return <div className="portal-narrow"><header className="portal-page-head"><div><p>Administration</p><h1>Settings</h1><span>Portal configuration and account security.</span></div></header><section className="portal-panel portal-settings"><p className="portal-kicker">Signed-in account</p><h2>{actor.name}</h2><dl><div><dt>Email address</dt><dd>{actor.email}</dd></div><div><dt>Access role</dt><dd>{roleLabel(actor.role)}</dd></div></dl><h3>Change password</h3><p className="portal-settings-intro">Use at least 12 characters. Updating your password will sign out other active sessions.</p><ChangePasswordForm/></section></div>}

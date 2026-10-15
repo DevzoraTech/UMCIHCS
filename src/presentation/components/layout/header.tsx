@@ -14,6 +14,7 @@ export function Header() {
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, []);
+  if (path.startsWith("/portal")) return null;
   return <>
     <a href="#main-content" className="skip-link">Skip to content</a>
     <div className="utility-bar"><div className="container utility-inner"><span>Uniting stakeholders. Building responsibly.</span><Link href="/leadership">Our people <Arrow diagonal /></Link></div></div>
