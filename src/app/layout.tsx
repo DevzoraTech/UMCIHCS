@@ -4,7 +4,7 @@ import { Header } from "@/presentation/components/layout/header";
 import { Footer } from "@/presentation/components/layout/footer";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: { default: `${site.name} — Rooted in purpose. Growing together.`, template: `%s | ${site.name}` },
+  title: { default: `${site.name} — Uniting stakeholders. Building responsibly.`, template: `%s | ${site.name}` },
   description: site.description,
   icons: { icon: "/images/umcihcs-badge.jpg" },
 };

@@ -16,7 +16,7 @@ export function Header() {
   }, []);
   return <>
     <a href="#main-content" className="skip-link">Skip to content</a>
-    <div className="utility-bar"><div className="container utility-inner"><span>Rooted in Uganda. Growing together.</span><Link href="/leadership">Our people <Arrow diagonal /></Link></div></div>
+    <div className="utility-bar"><div className="container utility-inner"><span>Uniting stakeholders. Building responsibly.</span><Link href="/leadership">Our people <Arrow diagonal /></Link></div></div>
     <header className="site-header"><div className="container header-inner"><Brand />
       <button ref={toggle} className="menu-toggle" aria-expanded={open} aria-controls="primary-navigation" onClick={() => setOpen(!open)}>{open ? "Close" : "Menu"}<span aria-hidden="true">{open ? "×" : "☰"}</span></button>
       <nav id="primary-navigation" aria-label="Main navigation" className={open ? "navigation is-open" : "navigation"}>
