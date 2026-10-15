@@ -1,4 +1,6 @@
 import { PageHeading } from "@/presentation/components/ui/page-heading";
 import { GalleryViewer } from "@/presentation/components/gallery-viewer";
+import { ImagePlaceholder } from "@/presentation/components/ui/image-placeholder";
 export const metadata = { title: "In pictures" };
-export default function GalleryPage() { return <><PageHeading eyebrow="In pictures" title="A closer look at" accent="our community." description="People, connections and conversations. Explore photographs shared by the cooperative." /><section className="container section"><GalleryViewer/></section></>; }
+const futureImages = ["Field learning and sustainable practice", "Processing and value-addition activity", "Member and partner profiles"];
+export default function GalleryPage() { return <><PageHeading eyebrow="In pictures" title="A closer look at" accent="our community." description="Current photographs from the cooperative, followed by reserved spaces for future programme and member imagery." /><section className="container section"><GalleryViewer/></section><section className="quiet-band"><div className="container"><div className="section-heading"><div><p className="eyebrow">Images to come</p><h2>Space for the work<br/><em>as it develops.</em></h2></div><p className="section-description">These spaces will be replaced with verified UMCIHCS photographs when they are supplied.</p></div><div className="future-image-grid">{futureImages.map(label=><ImagePlaceholder key={label} label={label}/>)}</div></div></section></>; }
