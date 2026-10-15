@@ -1,6 +1,5 @@
 import { getStore } from "@netlify/blobs";
 import { validateMembershipApplication } from "@/domain/membership/application";
-import { databaseIsConfigured } from "@/infrastructure/database/pool";
 import type { ApplicationDocument, NewApplication } from "../domain/models";
 import { membershipRepository } from "../infrastructure/repository-factory";
 
@@ -28,7 +27,6 @@ async function storeDocument(reference: string, file: File): Promise<Application
 }
 
 export async function submitMembershipApplication(form: FormData) {
-  if (!databaseIsConfigured()) throw new Error("The membership repository is not configured.");
   if (String(form.get("website") ?? "")) return { accepted: true, reference: "" };
   const data = applicationDataFromForm(form);
   const validation = validateMembershipApplication(data);

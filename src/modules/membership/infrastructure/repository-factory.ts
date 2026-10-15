@@ -1,9 +1,9 @@
 import type { MembershipRepository } from "../application/repository";
 import { DemoMembershipRepository } from "./demo-membership-repository";
-import { PostgresMembershipRepository } from "./postgres-membership-repository";
+import { NetlifyBlobsMembershipRepository } from "./netlify-blobs-membership-repository";
 
 let repository: MembershipRepository | undefined;
 export function membershipRepository() {
-  if (!repository) repository = process.env.PORTAL_DEMO_MODE === "true" ? new DemoMembershipRepository() : new PostgresMembershipRepository();
+  if (!repository) repository = process.env.PORTAL_DEMO_MODE === "true" ? new DemoMembershipRepository() : new NetlifyBlobsMembershipRepository();
   return repository;
 }

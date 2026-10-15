@@ -1,4 +1,3 @@
 "use client";
-import { createAuthClient } from "better-auth/react";
-
-export const authClient = createAuthClient();
+async function request(path:string,options?:RequestInit){const response=await fetch(path,{...options,headers:{"Content-Type":"application/json",...(options?.headers??{})}});let data:Record<string,unknown>={};try{data=await response.json();}catch{}return{response,data};}
+export const authClient={signIn:{email:async({email,password}:{email:string;password:string;rememberMe?:boolean})=>{const{response,data}=await request("/api/portal/session",{method:"POST",body:JSON.stringify({email,password})});return response.ok?{data}:{error:{message:String(data.error??"Unable to sign in.")}};}},signOut:async()=>{await request("/api/portal/session",{method:"DELETE"});},changePassword:async({currentPassword,newPassword}:{currentPassword:string;newPassword:string;revokeOtherSessions?:boolean})=>{const{response,data}=await request("/api/portal/session",{method:"PUT",body:JSON.stringify({currentPassword,newPassword})});return response.ok?{data}:{error:{message:String(data.error??"Unable to update password.")}};}};
