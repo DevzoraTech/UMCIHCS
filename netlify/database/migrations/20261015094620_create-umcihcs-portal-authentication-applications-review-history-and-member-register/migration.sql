@@ -1,0 +1,2 @@
+-- This migration is retained because Netlify records migration names in its
+-- deployment history. The portal now uses the site’s private Blobs store.
